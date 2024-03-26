@@ -1,4 +1,3 @@
-// This shader is for learning
 #version 460
 #extension GL_GOOGLE_include_directive : enable
 //#include "hg_sdf.glsl" // Current extension doesn't support #include, still compiles
