@@ -1,14 +1,8 @@
-// This shader is for learning
 #version 460
 
 layout(location = 0) in vec3 position;
-layout(location = 1) in vec4 color; // Dont nessecarily need this here, could be used for weight blending at some point. Colors could be input later straight into the fragment shader from a vector, to change on the fly
+layout(location = 1) in vec4 color;
 
-// Might need to change this to uniforms later
-// MVP Matrices
-// Time
-// Light source
-// Etc
 layout(set = 0, binding = 0) uniform MvpData {
     mat4 model;
     mat4 view;
