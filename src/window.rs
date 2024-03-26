@@ -49,34 +49,10 @@ use winit::{
     window::{CursorGrabMode, WindowBuilder},
 };
 
-// Following example from https://fby-laboratory.com/articles/article4_en
-// Commented out depth buffer, reference site to re-include it (or uncomment)
-
 mod vs {
     vulkano_shaders::shader! {
         ty: "vertex",
         path: "src/shaders/raymarch.vert"
-        // src: "
-        //     #version 450
-        //     layout(location = 0) in vec3 position;
-        //     layout(location = 1) in vec4 color;
-
-        //     layout(set=0, binding=0)uniform MvpData{
-        //         mat4 model_array;
-        //         mat4 view_array;
-        //         mat4 proj_array;
-        //         float time;
-        //     } mvpd;
-
-        //     layout(location=0) out vec4 outcolor;
-
-        //     void main() {
-        //         //DO THESE HAVE TO BE USED?!?
-        //         //vec4 mvp_position = mvpd.proj_array * mvpd.view_array * mvpd.model_array * vec4(position, 1.0);
-        //         gl_Position = vec4(position, 1.0); //mvp_position;
-        //         outcolor = color;
-        //     }
-        // "
     }
 }
 
@@ -84,24 +60,6 @@ mod fs {
     vulkano_shaders::shader! {
         ty: "fragment",
         path: "src/shaders/raymarch.frag",
-        //include: ["src/shaders",]
-        // src: "
-        //     #version 450
-        //     layout(location=0) in vec4 incolor;
-
-        //     layout(set=0, binding=0)uniform MvpData{
-        //         mat4 model_array;
-        //         mat4 view_array;
-        //         mat4 proj_array;
-        //         float time;
-        //     } mvpd;
-
-        //     layout(location = 0) out vec4 f_color;
-        //     void main() {
-        //         float test = mvpd.time;
-        //         f_color = vec4(incolor.r * sin(mvpd.time), incolor.g * sin(mvpd.time), incolor.b * sin(mvpd.time), incolor.a);
-        //     }
-        // "
     }
 }
 
@@ -232,7 +190,6 @@ pub fn main() {
     }
 
     let vertices = [
-        // Full Screen Triangle Optimization (could be moved into shader and pipeline removed for 0.1 ms speed increase)
         // Vertices are placed in screen space (-1,1)
         Vertex {
             position: [-0.98, -0.98, 0.0],
@@ -262,41 +219,6 @@ pub fn main() {
         vertices,
     )
     .unwrap();
-
-    // let index_data: Vec<u32> = vec!(
-    //     0, 1, 2, 2, 3, 0
-    // );
-
-    // let index_buffer = Buffer::from_iter(
-    //     memory_allocator.clone(),
-    //     BufferCreateInfo {
-    //         usage: BufferUsage::INDEX_BUFFER,
-    //         ..Default::default()
-    //     },
-    //     AllocationCreateInfo {
-    //         memory_type_filter: MemoryTypeFilter::PREFER_DEVICE
-    //             | MemoryTypeFilter::HOST_SEQUENTIAL_WRITE,
-    //         ..Default::default()
-    //     },
-    //     index_data,
-    // )
-    // .unwrap();
-
-    // let depth_buffer = ImageView::new_default(
-    //     Image::new(
-    //         memory_allocator.clone(),
-    //         ImageCreateInfo {
-    //             image_type: ImageType::Dim2d,
-    //             format: Format::D16_UNORM,
-    //             extent: images[0].extent(),
-    //             usage: ImageUsage::DEPTH_STENCIL_ATTACHMENT | ImageUsage::TRANSIENT_ATTACHMENT,
-    //             ..Default::default()
-    //         },
-    //         AllocationCreateInfo::default(),
-    //     )
-    //     .unwrap(),
-    // )
-    // .unwrap();
 
     let uniform_buffer = SubbufferAllocator::new(
         memory_allocator.clone(),
@@ -452,31 +374,6 @@ pub fn main() {
     ///////////////////////////////////////////////////////////////////////////////////////////////
     event_loop.run(move |event, _, control_flow| {
         //*control_flow = ControlFlow::Poll;
-
-        // Update input
-        //crate::input::update(&mut input, &event); // not sure if theres a better way to structure files, this checks the top level crate
-        if input.update(&event){
-            if input.key_pressed(winit::event::VirtualKeyCode::W) {
-                println!("The 'W' key (US layout) was pressed on the keyboard");
-            }
-    
-            if input.key_held(winit::event::VirtualKeyCode::R) {
-                println!("The 'R' key (US layout) key is held");
-            }
-
-            if input.key_held(event::VirtualKeyCode::LAlt){
-                // cursor lock or hide or somthn idk
-            }
-    
-            // query the change in cursor this update
-            if input.mouse_held(0) {
-                let cursor_diff = input.mouse_diff();
-                if cursor_diff != (0.0, 0.0) {
-                    println!("The cursor diff is: {:?}", cursor_diff);
-                    println!("The cursor position is: {:?}", input.mouse()); // Return mouse coordinates in pixels
-                }
-            }
-        }
         
         // Main render loop
         match event {
@@ -790,8 +687,3 @@ pub fn main() {
         }
     });
 }
-
-// fn fr(){
-//     let example: Mat4 = glam::Mat4::look_at_rh(eye, center, up);
-//     cgmath::Matrix4::look_at_rh(eye, center, up)
-// }
